@@ -1,0 +1,80 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+    <a class="navbar-brand" href="{{url_for('home')}}">E-Learning Systems</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="{{url_for('home')}}">Home</a>
+        </li>
+        {% if not current_user.is_authenticated %}
+        <li class="nav-item dropdown active">
+          <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-expanded="false">Login</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <form class="dropdown-item" action="{{url_for('login')}}" method="POST">
+              <div class="form-group">
+                <label>Email address</label>
+                <input type="email" class="form-control" name="username" aria-describedby="emailHelp">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+              </div>
+              <div class="form-group">
+                <label>Password</label>
+                <input type="password" class="form-control" name="password">
+              </div>
+              <button type="submit" class="btn text-white" style="background-color:black;">Login</button>
+            </form>
+          </div>
+        </li>
+
+        <li class="nav-item dropdown active">
+          <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">Register</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <form class="dropdown-item" action="{{url_for('signup')}}" method="POST">
+              <div class="form-group">
+                <label>Enter Name</label>
+                <input type="text" class="form-control" name="name">
+              </div>
+
+              <div class="form-group">
+                <label>Email address</label>
+                <input type="email" class="form-control" name="username" aria-describedby="emailHelp">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+              </div>
+              <div class="form-group">
+                <label>Password</label>
+                <input type="password" class="form-control" name="password">
+              </div>
+
+              <div class="form-group">
+                <label>Confirm Password</label>
+                <input type="password" class="form-control" name="confirm_password">
+              </div>
+
+              <button type="submit" class="btn text-white" style="background-color:black;">Register</button>
+            </form>
+          </div>
+        </li>
+        {% endif %}
+        {% if current_user.is_authenticated %}
+        <li class="nav-item dropdown active">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+            Accounts
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{{url_for('get_user_courses')}}">My Courses</a>
+            {% if current_user.is_authenticated %}
+              {% if current_user.name=='admin' %}
+                <a class="dropdown-item" href="{{url_for('add_course')}}">Add Course</a>
+              {% endif %}
+            {% endif %}
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{{url_for('logout')}}">Logout</a>
+            <!-- <a class="dropdown-item" href="#">Something else here</a> -->
+          </div>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>

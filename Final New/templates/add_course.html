@@ -1,0 +1,224 @@
+{% extends 'layout.html' %}
+{% block content %}
+<header class="p-3 text-white" style="background-color: #1c1d1f;">
+    <div class="container">
+        <h1>Add Course</h1>
+    </div>
+</header>
+<div class="container my-4">
+    <div class="card" style="background-color: #f9f9fb;">
+        <div class="card-body">
+            <form>
+                <div class="form-group" required>
+                    <label for="title" style="font-weight: bold;">Enter Title</label>
+                    <input type="text" class="form-control" id="title">
+                </div>
+                <div class="form-group" id="page_url_form" hidden required>
+                    <label for="title" style="font-weight: bold;">Page URL</label>
+                    <input type="text" class="form-control" id="page_url">
+                </div>
+                <div class="form-group">
+                    <label for="subtitle" style="font-weight: bold;">Enter Subtitle</label>
+                    <input type="text" class="form-control" id="subtitle">
+                </div>
+
+                <div class="form-group">
+                    <label for="categories" style="font-weight: bold;">Enter categories</label>
+                    <select id="categories" placeholder="Select upto 5 tags" multiple>
+                        <option value="Design">Design</option>
+                        <option value="Development">Development</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="IT and Software">IT and Software</option>
+                        <option value="Business">Business</option>
+                        <option value="Data Analysis">Data Analysis</option>
+                        <option value="Data Scientist">Data Scientist</option>
+                        <option value="Web Development">Web Development</option>
+                        <option value="Django">Django</option>
+                        <option value="Flask">Flask</option>
+                        <option value="Java">Java</option>
+                        <option value="Javascript">Javascript</option>
+                        <option value="Angular">Angular</option>
+                        <option value="Python">Python</option>
+                        <option value="SQL">SQL</option>
+                        <option value="NOSQL">NOSQL</option>
+                        <option value="NodeJS">NodeJS</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="requirements" style="font-weight: bold;">Enter Requirements</label>
+                    <div id="requirements" style="background-color: white; height: 100px;">
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="description" style="font-weight: bold;">Enter Description</label>
+                    <div id="description" style="background-color: white; height: 400px;">
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="course_for" style="font-weight: bold;">Course For</label>
+                    <div id="course_for" style="background-color: white; height: 100px;">
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="author" style="font-weight: bold;">Author Name</label>
+                    <input type="text" class="form-control" id="author">
+                </div>
+                <div id="message" class="bg-success rounded p-3 my-3 text-white" hidden>
+
+                </div>
+                <button class="btn rounded text-white bg-success" id="save">Save</button>
+                <button class="btn rounded btn-secondary" id="saan">Save
+                    and Add Another</button>
+                <button class="btn rounded btn-danger text-white" id="cancel">Cancel</button>
+
+                <div class="modal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Response</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Data successfully added</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" id="view_page">View Page</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+    $(document).ready(function () {
+        var multipleCancelButton = new Choices('#categories', {
+            removeItemButton: true,
+            maxItemCount: -1,
+            searchResultLimit: 5,
+            renderChoiceLimit: -1,
+            duplicateItemsAllowed: false,
+            placeholder: true,
+            addItems: true,
+        });
+    });
+</script>
+
+<script>
+    document.querySelector('#title').value = '';
+    document.querySelector('#page_url').value = '';
+    document.querySelector('#subtitle').value = '';
+    const quill = new Quill('#description', {
+        modules: {
+            toolbar: [
+                [{ header: [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline'],
+                ['link', 'blockquote', 'image', 'code-block'],
+                [{ list: 'ordered' }, { list: 'bullet' }]
+            ]
+        },
+        placeholder: 'Enter your description...',
+        theme: 'snow'
+    });
+    const requirements = new Quill('#requirements', {
+        modules: {
+            toolbar: [
+                [{ header: [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline'],
+                ['link', 'blockquote', 'image', 'code-block'],
+                [{ list: 'ordered' }, { list: 'bullet' }]
+            ]
+        },
+        placeholder: 'Enter your requirements...',
+        theme: 'snow'
+    });
+
+    const course_for = new Quill('#course_for', {
+        modules: {
+            toolbar: [
+                [{ header: [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline'],
+                ['link', 'blockquote', 'image', 'code-block'],
+                [{ list: 'ordered' }, { list: 'bullet' }]
+            ]
+        },
+        placeholder: 'Who this course is for...',
+        theme: 'snow'
+    });
+
+    document.querySelector('#title').addEventListener('keyup', (event) => {
+        document.querySelector('#page_url_form').hidden = false;
+        let text_value = event.target.value;
+        text_value = text_value.trim();
+        text_value = text_value.toLowerCase().split(' ').join('-').trim();
+        document.querySelector('#page_url').value = text_value;
+    });
+
+    document.querySelector('#save').addEventListener('click', (event) => {
+        event.preventDefault();
+        const title = document.querySelector('#title').value;
+        const page_url = document.querySelector('#page_url').value;
+        const subtitle = document.querySelector('#subtitle').value;
+        const categories = document.querySelector('#categories');
+        const cat = categories.selectedOptions;
+        const author = document.querySelector('#author').value;
+        const selected_categories = new Array()
+        for (const object of cat) {
+            console.log(object);
+            selected_categories.push(object.value);
+        };
+        console.log(selected_categories);
+        const requirements = document.querySelector('#requirements').firstElementChild.innerHTML;
+        const description = document.querySelector('#description').firstElementChild.innerHTML;
+        const course_for = document.querySelector('#course_for').firstElementChild.innerHTML;
+        const data = {
+            title: title,
+            page_url: page_url,
+            subtitle: subtitle,
+            requirements: requirements,
+            description: description,
+            course_for: course_for,
+            categories: selected_categories,
+            author: author,
+        };
+        const json_data = JSON.stringify(data);
+
+        const test_data = { username: 'example' };
+
+        fetch('http://127.0.0.1:5000/add_course', {
+            method: 'POST', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => {
+            console.log(response);
+            return response.json();
+        })
+        .then(data => {
+            $('.modal').modal('show');
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    });
+    document.querySelector('#view_page').addEventListener('click', () => {
+        const page_url = document.querySelector('#page_url').value;
+        const url = `display/${page_url}`
+        return window.open(url);
+    });
+</script>
+{% endblock %}

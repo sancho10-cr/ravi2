@@ -1,0 +1,20 @@
+<div class="container mb-5" style="text-align: right">
+    <!-- Add Page Numbers -->
+    <a href="{{url_for('url',page=courses.page-1)}}" class="btn btn-outline-dark {% if courses.page==1 %} disabled {% endif %}">
+        &laquo
+    </a>
+    {% for page in courses.iter_pages(left_edge=1,right_edge=2,left_current=1,right_current=2) %}
+        {% if page %}
+            {% if page==courses.page %}
+                <a href="{{url_for('url',page=page)}}" class="btn btn-dark">{{page}}</a>
+            {% else %}
+                <a href="{{url_for('url',page=page)}}" class="btn btn-outline-dark" style="font-weight:bold">{{page}}</a>
+            {% endif %}
+        {% else %}
+            <a href="#" class="btn btn-outline-dark" style="font-weight:bold">...</a>
+        {% endif %}
+    {% endfor %}
+    <a href="{{url_for('url',page=courses.page+1)}}" class="btn btn-outline-dark {% if courses.page==courses.pages %} disabled {% endif %}">
+        &raquo
+    </a>
+</div>

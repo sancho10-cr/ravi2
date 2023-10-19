@@ -1,0 +1,82 @@
+{% extends 'layout.html' %}
+{% block content %}
+<header class="p-4 text-white" style="background-color: #1c1d1f;">
+    <div class="container">
+        <h1 style="font-weight: bold;">{{data.title|safe}}</h1>
+        <h4>{{data.subtitle|safe}}</h4>
+        <p class="my-2">Created by :&nbsp;
+            <a href="{{url_for('author',author=data.author.name)}}" class="btn btn-sm btn-primary">{{data.author.name|title}}</a>
+        </p>
+        <p class="mb-2">Categories :&nbsp;
+            {% for category in data.categories %}
+                <a href="{{url_for('categories',categories=category.name)}}" class="btn btn-sm btn-warning rounded">{{category.name|capitalize}}</a>
+            {% endfor %}
+        </p>
+        <p class="mb-2">Last Updated :&nbsp;
+            {{data.date.date()}}
+        </p>
+        {% if not data.id in user_course_list %}
+        <a href="#" class="btn btn-info text-white">
+            <i class="fa fa-shopping-cart" aria-hidden="true">&nbsp; Buy now</i>
+        </a>
+        {% endif %}
+    </div>
+</header>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8">
+            <hr>
+            <h3 style="font-weight: bold;">Requirements</h3>
+            <div id="requirements">
+                {{data.requirements|safe}}
+            </div>
+            <hr>
+            <h3 style="font-weight: bold;" class="mt-4 mb-3">Description</h3>
+            <div id="description">
+                {{data.description|safe}}
+            </div>
+            <hr>
+            <h3 style="font-weight: bold;" class="mt-4 mb-3">Who this course is for:</h3>
+            <div id="description">
+                {{data.course_for|safe}}
+            </div>
+
+            {% if author_courses %}
+            <h3 style="font-weight: bold;" class="mt-5 mb-3">More Courses by 
+                <a href="{{url_for('author',author=data.author.name)}}">{{data.author.name|title}}</a></h3>
+            <div class="row">
+                {% for author_course in author_courses %}
+                <div class="col-sm-4">
+                    <div class="card mb-4">
+                        <img src="{{url_for('static',filename='e-learning1.jpg')}}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                          <p class="card-title" style="color:black; font-size: 16px; font-weight:bold;" >{{author_course.title}}</p>
+                          <a href="{{url_for('display',page_url=author_course.page_url)}}" class="btn text-white" style="background-color: black;">
+                            <i class="fa fa-eye"></i>
+                          </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            <hr>
+            <h3 style="font-weight: bold;" class="mb-3">Recommended Courses</h3>
+            {% for recom_course in recommended_courses %}
+            <div class="card mb-4" style="width: 18rem;">
+                <img src="{{url_for('static',filename=recom_course[1])}}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{recom_course[0].title}}</h5>
+                    <p class="card-text">{{recom_course[0].subtitle}}</p>
+                    <a href="{{url_for('display',page_url=recom_course[0].page_url)}}" target="_blank" class="btn text-white" style="background-color: black;">
+                        <i class="fa fa-eye"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'layout.html' %}
+{% block content %}
+<header class="p-3 text-white" style="background-color: #1c1d1f;">
+    <div class="container">
+        <h1>{{title}}</h1>
+    </div>
+    <div class="container">
+        <h3>{{subtitle}}</h3>
+    </div>
+</header>
+<div class="container my-5" id="main_content"> 
+    <div class="row">
+        {% for course in courses %}
+        <div class="col-sm-4 mb-2">
+            <div class="card">
+                <!-- <img src="..." class="card-img-top" alt="..."> -->
+                <div class="card-body">
+                  <h5 class="card-title">{{course.title}}</h5>
+                  <p class="card-text">{{course.subtitle}}</p>
+                  <p class="card-text">Categories: 
+                    {% for category in course.categories %}
+                        <a href="{{url_for('categories',categories=category.name)}}" class="btn btn-sm btn-warning rounded mb-2">{{category.name|capitalize}}</a>
+                    {% endfor %}
+                  </p>
+                  <p class="card-text">Author:
+                    <a href="{{url_for('author',author=course.author.name)}}" target="_blank" class="btn btn-sm btn-primary rounded mb-2">{{course.author.name|title}}</a>
+                  </p>
+                  <a href="{{url_for('display',page_url=course.page_url)}}" target="_blank" class="btn text-white" style="background-color: black;">
+                    <i class="fa fa-eye"></i>
+                  </a>
+                  {% if current_user.is_authenticated %}
+                    {% if current_user.name=='admin' %}
+                  <a href="{{url_for('delete',page_url=course.page_url)}}" id="delete-btn" class="btn btn-danger text-white">
+                    <i class="fa fa-trash"></i>
+                  </a>
+                    {% endif %}
+                  {% endif %}
+                  {% if current_user.is_authenticated %}
+                    {% if not course.id in user_course_list %}
+                  <a href="{{url_for('buy_course',course_id=course.id)}}" class="btn btn-info text-white float-right">
+                    <i class="fa fa-shopping-cart" aria-hidden="true">&nbsp; Buy now</i>
+                  </a>
+                  {% else %}
+                  <a href="#" class="btn btn-success text-white float-right">
+                    <i class="fa fa-check" aria-hidden="true">&nbsp; Purchased</i>
+                  </a>
+                    {% endif %}
+                  {% else %}
+                  <a href="{{url_for('buy_course',course_id=course.id)}}" class="btn btn-info text-white float-right">
+                    <i class="fa fa-shopping-cart" aria-hidden="true">&nbsp; Buy now</i>
+                  </a>
+                  {% endif %}
+                </div>
+              </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
